@@ -50,253 +50,253 @@
   {
     "id": 9,
     "title": "第9問",
-    "description": "【問題図は☗２三香まで】",
-    "initialSfen": "4R1Bks/6p1l/6+bL1/9/9/9/9/9/9 w r4g3s4n2l17p 1"
-  },
-  {
-    "id": 10,
-    "title": "第10問",
     "description": "【問題図は☗３五香まで】 ３七にいた香を３五に浮いて、開き王手をかけたところです。",
     "initialSfen": "9/9/7+R1/9/5rL1k/4N3p/8N/5B3/9 w b4g4s2n3l17p 1"
   },
   {
-    "id": 11,
-    "title": "第11問",
+    "id": 10,
+    "title": "第10問",
     "description": "【問題図は☗３三香不成まで】 ３四の地点にいた香を３三香不成と入って、開き王手をかけたところです。",
     "initialSfen": "8s/6P1k/6L1s/7+PN/5B3/9/9/9/9 w 2rb4g2s3n3l16p 1"
   },
   {
-    "id": 12,
-    "title": "第12問",
+    "id": 11,
+    "title": "第11問",
     "description": "【問題図は☗４二香成まで】 ４五にいた香を４二に成って、角の開き王手をかけた局面です。",
-    "initialSfen": "8s/5+L2k/8p/7Pn/3P5/4B4/9/9/9 w N2rb4g3s2n3l15p 1"
+    "initialSfen": "8s/5+L2k/8p/7PN/3P5/4B4/9/9/9 w N2rb4g3s2n3l15p 1"
   },
   {
-    "id": 13,
-    "title": "第13問",
+    "id": 12,
+    "title": "第12問",
     "description": "【問題図は☗８一香成まで】 ８八の香が８一に成って、角の開き王手をかけた局面です。",
     "initialSfen": "r+L6k/l8/8N/9/9/9/9/9/B6R1 w b4g4s3n2l18p 1"
   },
   {
-    "id": 14,
-    "title": "第14問",
+    "id": 13,
+    "title": "第13問",
     "description": "【問題図は☗３二香成まで】 ３四にいた香を３二に成って、開き王手をかけた局面です。",
     "initialSfen": "8l/6+L1k/5p3/7P1/5B3/9/9/9/9 b 2rb4g4s4n2l16p 1"
   },
   {
-    "id": 15,
-    "title": "第15問",
+    "id": 14,
+    "title": "第14問",
     "description": "【問題図は☗５五香まで】 ５九にいた香を５五に浮いて竜による開き王手をかけた局面です。",
     "initialSfen": "8b/9/9/9/4L4/9/7R1/9/+R7k b b4g4s4n3l18p 1"
   },
   {
-    "id": 16,
-    "title": "第16問",
+    "id": 15,
+    "title": "第15問",
     "description": "【問題図は☗１四香まで】",
     "initialSfen": "6+Pn1/6+B1k/7n1/8L/9/9/9/9/9 b 2rb4g4s2n3l17p 1"
+  },
+  {
+    "id": 16,
+    "title": "第16問",
+    "description": "【問題図は☗１三香まで】",
+    "initialSfen": "6+Psk/9/7LL/9/9/9/9/9/9 b 2r2b4g3s4n2l17p 1"
   },
   {
     "id": 17,
     "title": "第17問",
     "description": "【問題図は☗１三香まで】",
-    "initialSfen": "6+Psk/9/7LL/9/9/9/9/9/9 b 2r2b4g3s4n2l17p 1"
+    "initialSfen": "6+Pgk/9/7LL/7r1/9/9/9/9/9 b r2b3g4s4n2l17p 1"
   },
   {
     "id": 18,
     "title": "第18問",
     "description": "【問題図は☗１三香まで】",
-    "initialSfen": "6+Pgk/9/7LL/7r1/9/9/9/9/9 b r2b3g4s4n2l17p 1"
+    "initialSfen": "7bk/6+P2/8L/4B3p/9/9/9/9/9 b 2r4g4s4n3l16p 1"
   },
   {
     "id": 19,
     "title": "第19問",
-    "description": "【問題図は☗１三香まで】",
-    "initialSfen": "7bk/6+P2/8L/4B3p/9/9/9/9/9 b 2r4g4s4n3l16p 1"
-  },
-  {
-    "id": 20,
-    "title": "第20問",
     "description": "【問題図は☗３三桂まで】",
     "initialSfen": "6pkl/8R/6N2/8P/8L/9/9/9/9 w r2b4g4s3n2l16p 1"
   },
   {
-    "id": 21,
-    "title": "第21問",
+    "id": 20,
+    "title": "第20問",
     "description": "【問題図は☗３三桂不成まで】",
     "initialSfen": "7k1/9/6N2/6NN1/8N/9/9/9/9 w 2r2b4g4s4l18p 1"
   },
   {
-    "id": 22,
-    "title": "第22問",
+    "id": 21,
+    "title": "第21問",
     "description": "【問題図は☗２三桂不成まで】",
     "initialSfen": "8k/9/7N1/6NN1/5N3/9/9/9/9 w 2r2b4g4s4l18p 1"
+  },
+  {
+    "id": 22,
+    "title": "第22問",
+    "description": "【問題図は☗２三桂まで】",
+    "initialSfen": "8k/7n1/7N1/7N1/5N3/9/9/9/9 w 2r2b4g4s4l18p 1"
   },
   {
     "id": 23,
     "title": "第23問",
     "description": "【問題図は☗２三桂まで】",
-    "initialSfen": "8k/7n1/7N1/7N1/5N3/9/9/9/9 w 2r2b4g4s4l18p 1"
+    "initialSfen": "8k/7g1/7NP/9/9/9/9/9/9 w G2r2b2g4s3n4l17p 1"
   },
   {
     "id": 24,
     "title": "第24問",
     "description": "【問題図は☗２三桂まで】",
-    "initialSfen": "8k/7g1/7NP/9/9/9/9/9/9 w G2r2b2g4s3n4l17p 1"
+    "initialSfen": "7nk/7g1/6sNG/6r1L/9/9/9/9/9 w r2b2g3s2n3l18p 1"
   },
   {
     "id": 25,
     "title": "第25問",
     "description": "【問題図は☗２三桂まで】",
-    "initialSfen": "7nk/7g1/6sNG/6r1L/9/9/9/9/9 w r2b2g3s2n3l18p 1"
+    "initialSfen": "8k/4R3l/6PN1/9/6r2/9/9/9/9 w 2b4g4s3n3l17p 1"
   },
   {
     "id": 26,
     "title": "第26問",
     "description": "【問題図は☗２三桂まで】",
-    "initialSfen": "8k/4R3l/6PN1/9/6r2/9/9/9/9 w 2b4g4s3n3l17p 1"
+    "initialSfen": "8k/6+Rg1/7NP/8r/9/9/9/9/9 w 2b3g4s3n4l17p 1"
   },
   {
     "id": 27,
     "title": "第27問",
-    "description": "【問題図は☗２三桂まで】",
-    "initialSfen": "8k/6+Rg1/7NP/8r/9/9/9/9/9 w 2b3g4s3n4l17p 1"
-  },
-  {
-    "id": 28,
-    "title": "第28問",
-    "description": "【問題図は☗２三桂まで】",
-    "initialSfen": "7bk/7pp/6PN1/5B3/9/9/9/9/9 w 2r4g4s3n4l15p 1"
-  },
-  {
-    "id": 29,
-    "title": "第29問",
     "description": "【問題図は☗３三桂不成まで】",
     "initialSfen": "6sk1/6g2/6N1P/9/9/7L1/9/9/9 w 2r2b3g3s3n3l17p 1"
   },
   {
-    "id": 30,
-    "title": "第30問",
+    "id": 28,
+    "title": "第28問",
     "description": "【問題図は☗３三桂不成まで】 ４五にいた桂を３三不成とジャンプして、開き王手をかけた局面です。",
     "initialSfen": "6s2/8k/6N1p/7R1/9/4B4/9/9/9 b rb4g3s3n4l17p 1"
   },
   {
-    "id": 31,
-    "title": "第31問",
-    "description": "【問題図は☗１三桂不成まで】",
-    "initialSfen": "2l3pk1/8n/7+PN/9/9/3N5/2B6/9/9 w 2rb4g4sn3l16p 1"
-  },
-  {
-    "id": 32,
-    "title": "第32問",
+    "id": 29,
+    "title": "第29問",
     "description": "【問題図は☗６二桂成まで】 ５四の桂を６二桂成として、竜による開き王手をかけた局面です。",
     "initialSfen": "3l5/3+N4l/9/3+R4k/8p/7L1/9/9/9 b r2b4g4s3nl17p 1"
   },
   {
-    "id": 33,
-    "title": "第33問",
+    "id": 30,
+    "title": "第30問",
     "description": "【問題図は☗３三桂成まで】 ４五の桂を３三に成って、開き王手をかけたところです。",
     "initialSfen": "7nl/8k/6+N2/9/9/4B4/9/9/9 b 2rb4g4s2n3l18p 1"
   },
   {
-    "id": 34,
-    "title": "第34問",
+    "id": 31,
+    "title": "第31問",
     "description": "【問題図は☗２三桂成まで】",
     "initialSfen": "9/5b3/5g+R+Np/8k/7r1/8L/9/9/9 w b3g4s3n3l17p 1"
   },
   {
-    "id": 35,
-    "title": "第35問",
+    "id": 32,
+    "title": "第32問",
     "description": "【問題図は☗６四桂まで】 ５六にいた桂を６四に跳ねて、８九の角で開き王手をかけた局面です。",
     "initialSfen": "6snl/3r4k/9/3N3P1/9/9/9/9/1B7 w rb4g3s2n3l17p 1"
   },
   {
-    "id": 36,
-    "title": "第36問",
-    "description": "【問題図は☗３二桂成まで】",
-    "initialSfen": "6pkl/5+P+N1p/9/5sP1P/7+B1/9/9/7L1/2b4L1 w 2r4g3s3nl13p 1"
-  },
-  {
-    "id": 37,
-    "title": "第37問",
+    "id": 33,
+    "title": "第33問",
     "description": "【問題図は☗２四桂まで】 １六にいた桂を２四に跳ねて開き王手をかけたところです。",
     "initialSfen": "8k/9/9/6LN1/9/9/9/9/8R b r2b4g4s3n3l18p 1"
   },
   {
-    "id": 38,
-    "title": "第38問",
+    "id": 34,
+    "title": "第34問",
     "description": "【問題図は☗１二銀まで】",
     "initialSfen": "7lk/8S/9/7+Rp/9/9/9/9/9 b Lr2b4g3s4n2l17p 1"
   },
   {
-    "id": 39,
-    "title": "第39問",
+    "id": 35,
+    "title": "第35問",
     "description": "【問題図は☗５一銀打まで】",
     "initialSfen": "4Ssg2/3+bSk3/4P2+Rr/9/9/9/9/9/9 w b3gs4n4l17p 1"
   },
   {
-    "id": 40,
-    "title": "第40問",
+    "id": 36,
+    "title": "第36問",
     "description": "【問題図は☗６四銀左不成まで】",
     "initialSfen": "9/4nb3/4S4/3Sp4/3lkl3/4N4/4S4/9/9 w 2rb4gs2n2l17p 1"
   },
   {
-    "id": 41,
-    "title": "第41問",
+    "id": 37,
+    "title": "第37問",
     "description": "【問題図は☗２三銀不成まで】",
     "initialSfen": "6sn1/6k2/5R1S1/9/5NB2/9/9/9/9 b rb4g2s2n4l18p 1"
   },
   {
-    "id": 42,
-    "title": "第42問",
+    "id": 38,
+    "title": "第38問",
     "description": "【問題図は☗３二銀不成まで】",
     "initialSfen": "7kl/6S2/9/5N1P1/9/9/9/9/9 w 2r2b4g3s3n3l17p 1"
   },
   {
-    "id": 43,
-    "title": "第43問",
+    "id": 39,
+    "title": "第39問",
     "description": "【問題図は☗３一銀不成まで】",
     "initialSfen": "6S1l/7k1/6ppp/5N3/9/9/9/9/9 b G2r2b3g3s3n3l15p 1"
   },
   {
-    "id": 44,
-    "title": "第44問",
+    "id": 40,
+    "title": "第40問",
     "description": "【問題図は☗２一銀まで】",
     "initialSfen": "7Sl/6s1k/8s/9/7L1/9/9/9/9 b G2r2b3gs4n2l18p 1"
   },
   {
-    "id": 45,
-    "title": "第45問",
+    "id": 41,
+    "title": "第41問",
     "description": "【問題図は☗３二銀まで】",
     "initialSfen": "6nkn/6Sg1/7G1/9/5B3/9/9/9/9 b 2rb2g3s2n4l18p 1"
   },
   {
-    "id": 46,
-    "title": "第46問",
+    "id": 42,
+    "title": "第42問",
     "description": "【問題図は☗４二銀まで】",
     "initialSfen": "3pks3/2R2S3/4P4/4r4/9/9/9/9/9 b 2b4g2s4n4l16p 1"
   },
   {
-    "id": 47,
-    "title": "第47問",
+    "id": 43,
+    "title": "第43問",
     "description": "【問題図は☗５二銀まで】",
     "initialSfen": "3pks3/4S3+R/9/4Nb3/9/9/9/9/9 b rb4g2s3n4l17p 1"
   },
   {
-    "id": 48,
-    "title": "第48問",
-    "description": "【問題図は☗２六銀打まで】",
-    "initialSfen": "9/9/8p/9/6SPk/6BSn/9/9/9 w 2rb4g2s3n4l16p 1"
-  },
-  {
-    "id": 49,
-    "title": "第49問",
+    "id": 44,
+    "title": "第44問",
     "description": "【問題図は☗１二銀まで】",
     "initialSfen": "6g1k/8S/8p/6N1N/5B3/9/9/9/9 w 2rb3g3s2n4l17p 1"
   },
   {
-    "id": 50,
-    "title": "第50問",
+    "id": 45,
+    "title": "第45問",
     "description": "【問題図は☗２三銀打まで】",
     "initialSfen": "7nl/5+RSk1/6pSp/9/7+r1/9/9/9/9 w 2b4g2s3n3l16p 1"
+  },
+  {
+    "id": 46,
+    "title": "第46問",
+    "description": "【問題図は☗２三香まで】",
+    "initialSfen": "4R1Bks/6p1l/6+bL1/9/9/9/9/9/9 w r4g3s4n2l17p 1"
+  },
+  {
+    "id": 47,
+    "title": "第47問",
+    "description": "【問題図は☗２三桂まで】",
+    "initialSfen": "7bk/7pp/6PN1/5B3/9/9/9/9/9 w 2r4g4s3n4l15p 1"
+  },
+  {
+    "id": 48,
+    "title": "第48問",
+    "description": "【問題図は☗１三桂不成まで】",
+    "initialSfen": "2l3pk1/8n/7+PN/9/9/3N5/2B6/9/9 w 2rb4g4sn3l16p 1"
+  },
+  {
+    "id": 49,
+    "title": "第49問",
+    "description": "【問題図は☗２六銀打まで】",
+    "initialSfen": "9/9/8p/9/6SPk/6BSn/9/9/9 w 2rb4g2s3n4l16p 1"
+  },
+  {
+    "id": 50,
+    "title": "第50問",
+    "description": "【問題図は☗３二桂成まで】",
+    "initialSfen": "6pkl/5+P+N1p/9/5sP1P/7+B1/9/9/7L1/2b4L1 w 2r4g3s3nl13p 1"
   }
 ]
