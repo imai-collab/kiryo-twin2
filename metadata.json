@@ -1,0 +1,6 @@
+{
+  "name": "２手詰②",
+  "description": "終盤練習ができるアプリです。最初は後手番の手を指し、次の先手番で詰ましてください。",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
