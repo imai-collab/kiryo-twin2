@@ -1377,14 +1377,13 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
             <div
               onClick={() => !isEditMode && handleHandClick(kind as string, color)}
               className={`
-                relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center rounded
-                ${!isEditMode && color === Color.Black ? 'cursor-pointer' : ''}
-                ${color === Color.Black ? 'border border-amber-800/30 bg-white/80 hover:bg-amber-100 shadow-sm' : 'bg-transparent'}
+                relative flex items-center justify-center rounded
+                ${color === Color.Black ? 'w-[10vw] max-w-[46px] h-[10vw] max-h-[46px] cursor-pointer border border-amber-800/30 bg-white/80 hover:bg-amber-100 shadow-sm' : 'w-8 h-8 sm:w-10 sm:h-10 bg-transparent'}
                 ${selectedHandPiece?.piece === kind && selectedHandPiece?.color === color ? '!bg-amber-400/50' : ''}
                 transition-all duration-200
               `}
             >
-              <span className={`text-lg sm:text-2xl font-bold ${color === Color.White ? 'rotate-180 text-amber-900' : 'text-amber-950'} ${isEditMode && count === 0 ? 'opacity-30' : ''}`}>
+              <span className={`font-bold ${color === Color.White ? 'text-lg sm:text-xl rotate-180 text-amber-900' : 'text-xl sm:text-2xl md:text-3xl text-amber-950'} ${isEditMode && count === 0 ? 'opacity-30' : ''}`}>
                 {PIECE_NAMES[kind as string] || kind}
               </span>
               {(count as number) > 1 && (
@@ -1393,7 +1392,7 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
                 </span>
               )}
             </div>
-            {isEditMode && color === Color.Black && (
+            {isEditMode && (
               <div className="flex gap-1">
                 <button 
                   onClick={() => {
@@ -1632,7 +1631,7 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
           <div className="w-full flex flex-col justify-center items-center gap-1 sm:gap-4">
             
             {/* Gote Hand (Top) */}
-            <div className="w-full max-w-full sm:max-w-[420px] flex flex-row px-0 sm:px-2">
+            <div className="w-full max-w-full sm:max-w-[480px] flex flex-row px-0 sm:px-2">
               <div className="w-full bg-amber-900/5 p-1 sm:p-3 rounded-lg sm:rounded-xl border border-amber-900/10 min-h-[40px] flex flex-row items-center gap-2 sm:gap-4">
                 <h3 className="text-xs sm:text-sm font-bold text-amber-900/60 whitespace-nowrap ml-1 sm:ml-0">後手</h3>
                 <div className="flex-1 flex flex-row justify-start flex-wrap">
@@ -1672,10 +1671,10 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
             </div>
 
             {/* Sente Hand (Bottom) */}
-            <div className="w-full max-w-full sm:max-w-[420px] flex flex-row px-0 sm:px-2">
+            <div className="w-full max-w-full sm:max-w-[480px] flex flex-row px-0 sm:px-2">
               <div className="w-full bg-amber-900/5 p-1 sm:p-3 rounded-lg sm:rounded-xl border border-amber-900/10 min-h-[40px] flex flex-row items-center gap-2 sm:gap-4">
                 <h3 className="text-xs sm:text-sm font-bold text-amber-900/60 whitespace-nowrap ml-1 sm:ml-0">先手</h3>
-                <div className="flex-1 flex flex-row justify-end flex-wrap">
+                <div className="flex-1 flex flex-row justify-center flex-wrap">
                   {renderHand(Color.Black)}
                 </div>
               </div>
@@ -1683,7 +1682,7 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
             
             {/* Message Area moved below Sente Hand */}
             <div className={`
-              w-full max-w-full sm:max-w-[420px] p-2 sm:p-4 rounded-lg sm:rounded-xl text-center font-bold text-sm sm:text-lg transition-all duration-300 mx-2 sm:mx-0 shadow-sm
+              w-full max-w-full sm:max-w-[480px] p-2 sm:p-4 rounded-lg sm:rounded-xl text-center font-bold text-sm sm:text-lg transition-all duration-300 mx-2 sm:mx-0 shadow-sm
               ${isGameOver ? 'bg-green-100 text-green-800 scale-105' : 'bg-amber-100 border border-amber-200 text-amber-900'}
             `}>
               {message === 'CORRECT' ? (
@@ -1705,7 +1704,7 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
               )}
             </div>
 
-            <div className="flex flex-row w-full max-w-full px-2 sm:px-0 sm:max-w-[420px] gap-2 mt-1 sm:mt-0">
+            <div className="flex flex-row w-full max-w-full px-2 sm:px-0 sm:max-w-[480px] gap-2 mt-1 sm:mt-0">
               <button
                 onClick={resetGame}
                 className="flex-1 flex items-center justify-center gap-1 sm:gap-2 bg-amber-800 text-white py-1.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-base hover:bg-amber-900 transition-colors shadow-sm active:scale-95"
