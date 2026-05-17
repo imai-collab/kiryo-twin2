@@ -579,6 +579,7 @@ export default function App() {
   const [selectedSquare, setSelectedSquare] = useState<Position | null>(null);
   const [selectedHandPiece, setSelectedHandPiece] = useState<{ piece: string; color: Color } | null>(null);
   const [message, setMessage] = useState<string>('あなたの番です。');
+  const [showCorrectSplash, setShowCorrectSplash] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [moveHistory, setMoveHistory] = useState<Move[]>([]);
   const [isGoteManualEntry, setIsGoteManualEntry] = useState(false);
@@ -970,20 +971,26 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
     
     try {
       const newShogi = new Shogi();
+      
+      // 常に後手番からスタートするようにSFENを書き換える
+      let initialSfen = currentProblem.initialSfen;
+      if (initialSfen.includes(' b ')) {
+        initialSfen = initialSfen.replace(' b ', ' w ');
+      }
+      
       try {
-        const initialSfenWithTurn = currentProblem.initialSfen.replace(' b ', ' w ');
         if (newShogi.initializeFromSFENString) {
-          newShogi.initializeFromSFENString(initialSfenWithTurn);
+          newShogi.initializeFromSFENString(initialSfen);
         } else if (newShogi.initializeFromSFEN) {
-          newShogi.initializeFromSFEN(initialSfenWithTurn);
+          newShogi.initializeFromSFEN(initialSfen);
         }
       } catch (sfenError) {
-        console.error("Invalid SFEN:", currentProblem.initialSfen);
+        console.error("Invalid SFEN:", initialSfen);
         // Initialize with empty board if SFEN is invalid
         if (newShogi.initializeFromSFENString) {
-          newShogi.initializeFromSFENString("9/9/9/9/9/9/9/9/9 b - 1");
+          newShogi.initializeFromSFENString("9/9/9/9/9/9/9/9/9 w - 1");
         } else {
-          newShogi.initializeFromSFEN("9/9/9/9/9/9/9/9/9 b - 1");
+          newShogi.initializeFromSFEN("9/9/9/9/9/9/9/9/9 w - 1");
         }
         setAlertDialog(`問題「${currentProblem.title}」の盤面データが不正なため、空の盤面を表示しています。「盤面を修正」から修正してください。`);
       }
@@ -1004,7 +1011,36 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
     }
   }, [currentProblem]);
 
+  const handleChangeGoteMove = useCallback(() => {
+    if (moveHistory.length === 0) return;
+    const isSentesTurn = moveHistory.length % 2 !== 0;
+    
+    if (!isSentesTurn) return;
 
+    const newMoveHistory = [...moveHistory];
+    const newSfenHistory = [...sfenHistory];
+    
+    newMoveHistory.pop();
+    newSfenHistory.pop();
+
+    const newShogi = new Shogi();
+    if (newShogi.initializeFromSFENString) {
+      newShogi.initializeFromSFENString(newSfenHistory[newSfenHistory.length - 1]);
+    } else {
+      newShogi.initializeFromSFEN(newSfenHistory[newSfenHistory.length - 1]);
+    }
+    
+    setSfenHistory(newSfenHistory);
+    setMoveHistory(newMoveHistory);
+    setShogi(newShogi);
+    
+    setIsGoteManualEntry(true);
+    setIsGameOver(false);
+    setMessage('後手の手を入力してください。');
+    setSelectedSquare(null);
+    setSelectedHandPiece(null);
+    setPendingPromotionMove(null);
+  }, [moveHistory, sfenHistory]);
 
   useEffect(() => {
     resetGame();
@@ -1221,7 +1257,9 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
       if (turnColor === Color.White) {
         setMessage('指す手がありません。失敗です。');
       } else {
-        setMessage('詰みです！おめでとうございます！');
+        setMessage('CORRECT');
+        setShowCorrectSplash(true);
+        setTimeout(() => setShowCorrectSplash(false), 1000);
         confetti({
           particleCount: 150,
           spread: 70,
@@ -1260,7 +1298,9 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
         setShogi(cloneShogi(nextShogi));
       } else {
         setIsGameOver(true);
-        setMessage('詰みです！おめでとうございます！');
+        setMessage('CORRECT');
+        setShowCorrectSplash(true);
+        setTimeout(() => setShowCorrectSplash(false), 1000);
         confetti({
           particleCount: 150,
           spread: 70,
@@ -1306,7 +1346,7 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
                   `}
                 >
                   <span className={`
-                    text-base sm:text-2xl md:text-3xl font-bold select-none
+                    text-xl sm:text-2xl md:text-3xl font-bold select-none
                     ${piece.color === Color.White ? 'rotate-180 text-amber-900' : 'text-amber-950'}
                   `}>
                     {PIECE_NAMES[piece.kind] || piece.kind}
@@ -1315,8 +1355,6 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
               </motion.div>
             )}
             {/* Coordinates for edge cells */}
-            {y === 1 && <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-amber-800/60 font-mono">{x}</span>}
-            {x === 1 && <span className="absolute top-1/2 -right-6 -translate-y-1/2 text-xs text-amber-800/60 font-mono">{['一', '二', '三', '四', '五', '六', '七', '八', '九'][y - 1]}</span>}
           </div>
         );
       }
@@ -1332,29 +1370,30 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
       : Object.entries(hand).filter(([_, count]) => (count as number) > 0);
 
     return (
-      <div className="flex flex-col flex-wrap gap-1 sm:gap-2 items-center justify-center">
+      <div className="flex flex-row flex-wrap gap-1 sm:gap-2 items-center justify-center">
         {!isEditMode && pieces.length === 0 && <span className="text-amber-800/40 text-[10px] sm:text-sm italic py-2">なし</span>}
         {pieces.map(([kind, count]) => (
           <div key={kind} className="flex flex-col items-center gap-1">
             <div
               onClick={() => !isEditMode && handleHandClick(kind as string, color)}
               className={`
-                relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center border border-amber-800/30 rounded
-                ${!isEditMode ? 'cursor-pointer' : ''}
-                ${selectedHandPiece?.piece === kind && selectedHandPiece?.color === color ? 'bg-amber-400/50' : 'bg-white/80 hover:bg-amber-100'}
-                transition-all duration-200 shadow-sm
+                relative w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center rounded
+                ${!isEditMode && color === Color.Black ? 'cursor-pointer' : ''}
+                ${color === Color.Black ? 'border border-amber-800/30 bg-white/80 hover:bg-amber-100 shadow-sm' : 'bg-transparent'}
+                ${selectedHandPiece?.piece === kind && selectedHandPiece?.color === color ? '!bg-amber-400/50' : ''}
+                transition-all duration-200
               `}
             >
               <span className={`text-lg sm:text-2xl font-bold ${color === Color.White ? 'rotate-180 text-amber-900' : 'text-amber-950'} ${isEditMode && count === 0 ? 'opacity-30' : ''}`}>
                 {PIECE_NAMES[kind as string] || kind}
               </span>
               {(count as number) > 1 && (
-                <span className="absolute -bottom-1 -right-1 bg-amber-800 text-white text-[10px] sm:text-xs w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full border border-white">
+                <span className={`absolute -bottom-1 -right-1 text-[10px] sm:text-xs w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center rounded-full border border-white ${color === Color.White ? 'bg-amber-900 text-white' : 'bg-amber-800 text-white'}`}>
                   {count as number}
                 </span>
               )}
             </div>
-            {isEditMode && (
+            {isEditMode && color === Color.Black && (
               <div className="flex gap-1">
                 <button 
                   onClick={() => {
@@ -1381,7 +1420,7 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
   };
 
   return (
-    <div className="min-h-screen bg-[#fdf6e3] text-amber-950 font-sans p-4 sm:p-8 flex flex-col items-center">
+    <div className="min-h-screen bg-[#fdf6e3] text-amber-950 font-sans py-1 sm:py-4 px-0 sm:px-8 flex flex-col items-center overflow-x-hidden">
       {/* Custom Modals */}
       {confirmDialog && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -1423,10 +1462,10 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
         </div>
       )}
 
-      <header className="w-full max-w-4xl flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
-        <div>
+      <header className="w-full max-w-4xl px-2 sm:px-0 flex flex-col sm:flex-row justify-between items-center mb-2 sm:mb-4 gap-2">
+        <div className="w-full sm:w-auto overflow-hidden">
           {isEditingTitle ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full">
               <input
                 type="text"
                 value={tempTitle}
@@ -1435,57 +1474,61 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
                   if (e.key === 'Enter') handleTitleSave();
                   if (e.key === 'Escape') setIsEditingTitle(false);
                 }}
-                className="text-3xl font-black tracking-tight text-amber-900 bg-white border-2 border-amber-300 rounded-lg px-2 py-1 outline-none focus:border-amber-500 w-full max-w-[300px]"
+                className="text-xl sm:text-2xl md:text-3xl font-black tracking-tighter text-amber-900 bg-white border-2 border-amber-300 rounded-lg px-2 py-1 outline-none focus:border-amber-500 w-full max-w-full sm:max-w-[400px]"
                 autoFocus
                 onBlur={handleTitleSave}
               />
             </div>
           ) : (
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0 flex-1">
               <h1 
-                className="text-3xl font-black tracking-tight text-amber-900 flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                className="text-xl sm:text-2xl md:text-3xl font-black tracking-tighter text-amber-900 flex items-center gap-1 sm:gap-2 cursor-pointer hover:opacity-80 transition-opacity w-full"
                 onClick={() => {
                   setTempTitle(appTitle);
                   setIsEditingTitle(true);
                 }}
                 title="クリックしてタイトルを編集"
               >
-                {appTitle}
-                <Trophy className="text-amber-600 w-6 h-6" />
-                <Edit2 className="w-4 h-4 text-amber-900/40 ml-2" />
+                <span className="truncate whitespace-nowrap overflow-hidden leading-tight">{appTitle}</span>
+                <Trophy className="text-amber-600 w-5 h-5 flex-shrink-0" />
+                <Edit2 className="w-4 h-4 text-amber-900/40 ml-1 flex-shrink-0" />
               </h1>
-              <div className="flex items-center gap-2">
-                <p className="text-amber-800/70 text-sm">Shogi Puzzle Master</p>
-                {isSaving && (
+              {isSaving && (
+                <div className="flex items-center mt-1">
                   <motion.span 
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="flex items-center gap-1 text-[10px] text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded-full border border-green-100"
+                    className="inline-flex items-center gap-1 text-[10px] text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded-full border border-green-100"
                   >
                     <Loader2 size={10} className="animate-spin" />
                     自動保存中...
                   </motion.span>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+          {!isEditMode && (
+            <h2 className="text-base sm:text-lg md:text-xl font-bold text-amber-900 whitespace-nowrap">
+              {currentProblem.title}
+            </h2>
+          )}
           <div className="flex items-center gap-2">
             <button
               onClick={() => setCurrentProblemIndex(prev => Math.max(0, prev - 1))}
               disabled={currentProblemIndex === 0}
-              className="p-2 rounded-full hover:bg-amber-200 disabled:opacity-30 transition-colors"
+              className="p-1 sm:p-2 rounded-full hover:bg-amber-200 disabled:opacity-30 transition-colors"
             >
               <ChevronLeft />
             </button>
-            <span className="font-bold px-4 py-1 bg-amber-200 rounded-full text-sm">
-              問題 {currentProblem.id} / {problems.length}
+            <span className="font-bold px-3 py-1 bg-amber-200 rounded-full text-xs sm:text-sm whitespace-nowrap">
+              問題 {currentProblemIndex + 1} / {problems.length}
             </span>
             <button
               onClick={() => setCurrentProblemIndex(prev => Math.min(problems.length - 1, prev + 1))}
               disabled={currentProblemIndex === problems.length - 1}
-              className="p-2 rounded-full hover:bg-amber-200 disabled:opacity-30 transition-colors"
+              className="p-1 sm:p-2 rounded-full hover:bg-amber-200 disabled:opacity-30 transition-colors"
             >
               <ChevronRight />
             </button>
@@ -1495,10 +1538,10 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
 
       <main className="w-full max-w-5xl flex flex-col lg:flex-row gap-8 items-start justify-center">
         {/* Info Column */}
-        <div className="w-full lg:w-1/3 space-y-6 order-2 lg:order-1">
-          <section className="bg-white/60 p-6 rounded-2xl border border-amber-200 shadow-sm">
-            <div className="mb-4">
-              {isEditMode ? (
+        <div className="w-full lg:w-1/3 px-2 sm:px-0 space-y-4 sm:space-y-6 order-2 lg:order-1">
+          <section className="bg-white/60 p-4 sm:p-6 rounded-xl border border-amber-200 shadow-sm flex flex-col gap-4">
+            {isEditMode ? (
+              <div className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-amber-700 block uppercase tracking-wider">問題タイトル</label>
                   <input
@@ -1516,66 +1559,58 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
                     placeholder="問題のタイトルを入力"
                   />
                 </div>
-              ) : (
-                <h2 className="text-xl font-bold flex items-center gap-2 flex-wrap">
-                  {currentProblem.title}
-                  <button onClick={() => setShowInfo(!showInfo)} className="text-amber-600 hover:text-amber-800" title="ヒント">
-                    <Info size={18} />
+
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-amber-700 block uppercase tracking-wider">問題の説明 / 解説</label>
+                  <textarea
+                    value={currentProblem.description}
+                    onChange={(e) => {
+                      const updatedProblems = [...problems];
+                      updatedProblems[currentProblemIndex] = {
+                        ...currentProblem,
+                        description: e.target.value,
+                      };
+                      setProblems(updatedProblems);
+                    }}
+                    className="w-full p-3 border border-amber-300 rounded-xl bg-white text-amber-900 mb-4 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    rows={4}
+                    placeholder="問題の説明を入力してください"
+                  />
+                  <button 
+                    onClick={toggleEditMode}
+                    className="w-full bg-amber-600 text-white py-2 rounded-lg font-bold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Check size={18} />
+                    編集内容を確定
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="text-amber-800 leading-relaxed whitespace-pre-wrap border-b border-amber-900/10 pb-4">
+                  {currentProblem.description}
+                </p>
+                <div className="flex justify-end">
+                  <button 
+                    onClick={toggleEditMode}
+                    className="flex items-center gap-1 text-sm px-3 py-1.5 rounded transition-colors bg-amber-200 text-amber-800 hover:bg-amber-300 font-bold"
+                    title="盤面を編集する"
+                  >
+                    <Edit2 size={14} /> 盤面を修正
+                  </button>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap pt-2">
+                  <button onClick={() => setShowInfo(!showInfo)} className="text-amber-600 hover:text-amber-800 flex items-center gap-1 text-sm font-bold bg-amber-100 px-2 py-1 rounded" title="ヒント">
+                    <Info size={16} /> ヒント
                   </button>
                   <button onClick={moveProblemUp} disabled={currentProblemIndex === 0} className="p-1 text-amber-600 hover:bg-amber-200 rounded disabled:opacity-30" title="前に移動"><ArrowUp size={16} /></button>
                   <button onClick={moveProblemDown} disabled={currentProblemIndex === problems.length - 1} className="p-1 text-amber-600 hover:bg-amber-200 rounded disabled:opacity-30" title="後ろに移動"><ArrowDown size={16} /></button>
                   <button onClick={renumberProblems} className="p-1 text-amber-600 hover:bg-amber-200 rounded" title="問題番号を順番通りに振り直す"><ListOrdered size={16} /></button>
                   <button onClick={duplicateProblem} className="p-1 text-amber-600 hover:bg-amber-200 rounded" title="この問題を複製"><Copy size={16} /></button>
                   <button onClick={deleteProblem} className="p-1 text-red-500 hover:bg-red-100 rounded" title="この問題を削除"><Trash2 size={16} /></button>
-                  <button 
-                    onClick={toggleEditMode}
-                    className={`flex items-center gap-1 text-sm px-2 py-1 rounded transition-colors ${isEditMode ? 'bg-amber-600 text-white' : 'bg-amber-200 text-amber-800 hover:bg-amber-300'}`}
-                    title="盤面を編集する"
-                  >
-                    {isEditMode ? <Check size={14} /> : <Edit2 size={14} />}
-                    {isEditMode ? '編集完了' : '盤面を修正'}
-                  </button>
-                </h2>
-              )}
-            </div>
-
-            {isEditMode ? (
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-amber-700 block uppercase tracking-wider">問題の説明 / 解説</label>
-                <textarea
-                  value={currentProblem.description}
-                  onChange={(e) => {
-                    const updatedProblems = [...problems];
-                    updatedProblems[currentProblemIndex] = {
-                      ...currentProblem,
-                      description: e.target.value,
-                    };
-                    setProblems(updatedProblems);
-                  }}
-                  className="w-full p-3 border border-amber-300 rounded-xl bg-white text-amber-900 mb-4 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                  rows={4}
-                  placeholder="問題の説明を入力してください"
-                />
-                <button 
-                  onClick={toggleEditMode}
-                  className="w-full bg-amber-600 text-white py-2 rounded-lg font-bold hover:bg-amber-700 transition-colors flex items-center justify-center gap-2"
-                >
-                  <Check size={18} />
-                  編集内容を確定
-                </button>
-              </div>
-            ) : (
-              <p className="text-amber-800 mb-4 leading-relaxed whitespace-pre-wrap">
-                {currentProblem.description}
-              </p>
+                </div>
+              </>
             )}
-            
-            <div className={`
-              p-4 rounded-xl text-center font-bold text-lg transition-all duration-300
-              ${isGameOver ? 'bg-green-100 text-green-800 scale-105' : 'bg-amber-100 text-amber-900'}
-            `}>
-              {message}
-            </div>
           </section>
 
           <AnimatePresence>
@@ -1593,59 +1628,106 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
         </div>
 
         {/* Board Area */}
-        <div className="w-full lg:w-2/3 flex flex-col gap-4 order-1 lg:order-2 items-center">
-          <div className="w-full flex flex-row justify-center items-stretch gap-1 sm:gap-4">
+        <div className="w-full lg:w-2/3 flex flex-col gap-1 sm:gap-4 order-1 lg:order-2 items-center">
+          <div className="w-full flex flex-col justify-center items-center gap-1 sm:gap-4">
             
-            {/* Gote Hand (Left) */}
-            <div className="w-12 sm:w-16 md:w-24 flex flex-col justify-start">
-              <div className="bg-amber-900/5 p-1 sm:p-3 rounded-xl border border-amber-900/10 min-h-[80px] h-full flex flex-col">
-                <h3 className="text-[10px] sm:text-xs font-bold text-amber-900/60 mb-2 text-center">後手</h3>
-                <div className="flex-1 flex flex-col justify-start">
+            {/* Gote Hand (Top) */}
+            <div className="w-full max-w-full sm:max-w-[420px] flex flex-row px-0 sm:px-2">
+              <div className="w-full bg-amber-900/5 p-1 sm:p-3 rounded-lg sm:rounded-xl border border-amber-900/10 min-h-[40px] flex flex-row items-center gap-2 sm:gap-4">
+                <h3 className="text-xs sm:text-sm font-bold text-amber-900/60 whitespace-nowrap ml-1 sm:ml-0">後手</h3>
+                <div className="flex-1 flex flex-row justify-start flex-wrap">
                   {renderHand(Color.White)}
                 </div>
               </div>
             </div>
 
             {/* Board */}
-            <div className="flex flex-col items-center gap-4">
-              <div className={`relative p-2 sm:p-6 rounded-lg shadow-2xl border-4 flex-shrink-0 transition-colors ${isEditMode ? 'bg-amber-100 border-amber-500' : 'bg-amber-200 border-amber-800/20'}`}>
+            <div className="flex flex-col items-center w-full">
+              <div className={`relative w-full sm:w-auto p-0 sm:p-6 sm:rounded-lg shadow-sm sm:shadow-2xl border-y-2 sm:border-4 flex-shrink-0 transition-colors ${isEditMode ? 'bg-amber-100 border-amber-500' : 'bg-amber-100 sm:bg-amber-200 border-amber-800/20 sm:border-amber-800/20'}`}>
                 {isEditMode && (
-                  <div className="absolute top-0 left-0 right-0 bg-amber-500 text-white text-xs font-bold text-center py-1 rounded-t-sm z-10">
+                  <div className="absolute top-0 left-0 right-0 bg-amber-500 text-white text-xs font-bold text-center py-0.5 sm:py-1 sm:rounded-t-sm z-10">
                     盤面編集モード
                   </div>
                 )}
-                <div className={`grid grid-cols-9 w-[260px] sm:w-[380px] md:w-[420px] bg-amber-50 border-2 border-amber-900 shadow-inner ${isEditMode ? 'mt-4' : ''}`}>
+                <div className={`grid grid-cols-9 w-full max-w-[600px] sm:w-[420px] bg-amber-50 border-2 border-amber-900 shadow-inner align-top ${isEditMode ? 'mt-4 sm:mt-4' : ''}`}>
                   {renderBoard()}
                 </div>
-              </div>
-              
-              <div className="flex flex-row w-full max-w-[260px] sm:max-w-[380px] md:max-w-[420px] gap-2">
-                <button
-                  onClick={resetGame}
-                  className="w-full flex items-center justify-center gap-1 sm:gap-2 bg-amber-800 text-white py-2 sm:py-3 rounded-xl font-bold text-sm sm:text-base hover:bg-amber-900 transition-colors shadow-md active:scale-95"
-                >
-                  <RotateCcw size={16} className="sm:w-[18px] sm:h-[18px]" />
-                  最初から
-                </button>
+                <AnimatePresence>
+                  {showCorrectSplash && (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 1.1 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="absolute inset-0 z-50 flex items-center justify-center pointer-events-none"
+                    >
+                      <div className="bg-[#e4eed9]/95 border-[3px] border-[#a0c58e] rounded-full px-6 py-3 sm:px-10 sm:py-4 shadow-xl flex items-center gap-3 backdrop-blur-sm">
+                        <Check className="w-8 h-8 sm:w-14 sm:h-14 text-[#66984e]" strokeWidth={2.5} />
+                        <span className="text-3xl sm:text-5xl font-black text-[#66984e] tracking-widest">正解！</span>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
 
-            {/* Sente Hand (Right) */}
-            <div className="w-12 sm:w-16 md:w-24 flex flex-col justify-end">
-              <div className="bg-amber-900/5 p-1 sm:p-3 rounded-xl border border-amber-900/10 min-h-[80px] h-full flex flex-col">
-                <div className="flex-1 flex flex-col justify-end">
+            {/* Sente Hand (Bottom) */}
+            <div className="w-full max-w-full sm:max-w-[420px] flex flex-row px-0 sm:px-2">
+              <div className="w-full bg-amber-900/5 p-1 sm:p-3 rounded-lg sm:rounded-xl border border-amber-900/10 min-h-[40px] flex flex-row items-center gap-2 sm:gap-4">
+                <h3 className="text-xs sm:text-sm font-bold text-amber-900/60 whitespace-nowrap ml-1 sm:ml-0">先手</h3>
+                <div className="flex-1 flex flex-row justify-end flex-wrap">
                   {renderHand(Color.Black)}
                 </div>
-                <h3 className="text-[10px] sm:text-xs font-bold text-amber-900/60 mt-2 text-center">先手</h3>
               </div>
             </div>
+            
+            {/* Message Area moved below Sente Hand */}
+            <div className={`
+              w-full max-w-full sm:max-w-[420px] p-2 sm:p-4 rounded-lg sm:rounded-xl text-center font-bold text-sm sm:text-lg transition-all duration-300 mx-2 sm:mx-0 shadow-sm
+              ${isGameOver ? 'bg-green-100 text-green-800 scale-105' : 'bg-amber-100 border border-amber-200 text-amber-900'}
+            `}>
+              {message === 'CORRECT' ? (
+                currentProblemIndex < problems.length - 1 ? (
+                  <button 
+                    onClick={() => {
+                      setCurrentProblemIndex(prev => prev + 1);
+                      // reset is handled by the useEffect watching currentProblemIndex
+                    }}
+                    className="w-full bg-green-600 text-white py-2 rounded-lg font-bold text-base hover:bg-green-700 transition-colors shadow-sm active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    次の問題へ <ChevronRight size={18} />
+                  </button>
+                ) : (
+                  <span className="text-green-800 text-sm sm:text-base block py-2">全問クリア！おめでとうございます🎉</span>
+                )
+              ) : (
+                message
+              )}
+            </div>
 
+            <div className="flex flex-row w-full max-w-full px-2 sm:px-0 sm:max-w-[420px] gap-2 mt-1 sm:mt-0">
+              <button
+                onClick={resetGame}
+                className="flex-1 flex items-center justify-center gap-1 sm:gap-2 bg-amber-800 text-white py-1.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-base hover:bg-amber-900 transition-colors shadow-sm active:scale-95"
+              >
+                <RotateCcw size={14} className="sm:w-[18px] sm:h-[18px]" />
+                最初から
+              </button>
+              <button
+                onClick={handleChangeGoteMove}
+                disabled={moveHistory.length === 0 || moveHistory.length % 2 === 0}
+                className={`flex-1 flex items-center justify-center bg-gray-600 text-white py-1.5 sm:py-3 rounded-lg sm:rounded-xl font-bold text-xs sm:text-base transition-colors shadow-sm active:scale-95 ${moveHistory.length === 0 || moveHistory.length % 2 === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-700'}`}
+              >
+                後手の手を変える
+              </button>
+            </div>
           </div>
 
           {/* Edit Palette */}
           {isEditMode && (
-            <div className="w-full max-w-[600px] bg-white/80 p-4 rounded-xl border border-amber-300 shadow-sm">
-              <h3 className="font-bold text-amber-900 mb-2">盤面編集ツール</h3>
+            <div className="w-full max-w-[600px] px-2 sm:px-0">
+              <div className="bg-white/80 p-4 rounded-xl border border-amber-300 shadow-sm">
+                <h3 className="font-bold text-amber-900 mb-2">盤面編集ツール</h3>
               <div className="flex flex-wrap gap-2 mb-4">
                 <button
                   onClick={() => setEditTool('eraser')}
@@ -1695,12 +1777,13 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
                 </div>
               </div>
             </div>
+          </div>
           )}
         </div>
       </main>
 
       {/* Upload Section */}
-      <div className="w-full max-w-5xl mt-8">
+      <div className="w-full max-w-5xl mt-8 px-2 sm:px-0">
         <div className="bg-white/60 p-4 rounded-xl border border-amber-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-amber-900 w-full sm:w-auto">
             <div className="flex items-center gap-2">
