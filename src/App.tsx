@@ -1900,7 +1900,7 @@ SFEN形式の例: 7nl/1R3sk2/5pppp/9/9/9/9/9/9 b GS 1
                 </div>
 
                 <footer className="text-center text-amber-900 font-bold text-sm py-4 pb-8">
-                  ©kiryoオリジナル詰将棋アプリ　２手詰③
+                  ©kiryoオリジナル詰将棋アプリ　２手詰②
                 </footer>
               </div>
             </motion.div>
